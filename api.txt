@@ -1,0 +1,104 @@
+# MongoChatBot API Documentation
+
+## Base URL
+http://localhost:3000
+
+## Available Endpoints
+
+### 1. Health Check
+
+Endpoint: GET /api/health
+Description: Check if the API is running
+Authentication: None
+
+Example Request:
+```
+curl -X GET http://localhost:3000/api/health
+```
+
+Example Response:
+```json
+{
+  "status": "ok",
+  "message": "API is running"
+}
+```
+
+### 2. Ask Question
+
+Endpoint: POST /api/ask
+Description: Ask a question about solar products
+Authentication: None
+Rate Limit: 10 requests per minute
+
+Request Body Parameters:
+- question (string, required): The question about solar products
+
+Example Request:
+```
+curl -X POST http://localhost:3000/api/ask \
+  -H "Content-Type: application/json" \
+  -d '{"question": "मुझे 400W से ऊपर के सोलर पैनल के बारे में बताएं"}'
+```
+
+Example Response:
+```json
+{
+  "success": true,
+  "question": "मुझे 400W से ऊपर के सोलर पैनल के बारे में बताएं",
+  "answer": "हमारे पास 400W से ऊपर के कई शानदार सोलर पैनल उपलब्ध हैं। लूम सोलर पैनल 440W मोनोक्रिस्टलाइन टाइप का है, जिसकी कीमत ₹10,500 है और इसमें 25 साल की वारंटी है। वारी सोलर पैनल 550W मोनोक्रिस्टलाइन PERC टाइप का है, जिसकी कीमत ₹12,500 है और इसमें 30 साल की वारंटी है। अदानी सोलर पैनल 400W भी उपलब्ध है, जिसकी कीमत ₹9,800 है। वारी बाइफेशियल सोलर पैनल 500W भी है जो दोनों तरफ से बिजली उत्पन्न कर सकता है, इसकी कीमत ₹14,000 है। सभी पैनल स्टॉक में उपलब्ध हैं।",
+  "productsCount": 20
+}
+```
+
+## Error Responses
+
+### 1. Bad Request (400)
+```json
+{
+  "success": false,
+  "error": "Question is required"
+}
+```
+
+### 2. Not Found (404)
+```json
+{
+  "success": false,
+  "error": "No products found in database"
+}
+```
+
+### 3. Rate Limit Exceeded (429)
+```json
+{
+  "success": false,
+  "error": "Too many requests, please try again later."
+}
+```
+
+### 4. Server Error (500)
+```json
+{
+  "success": false,
+  "error": "Server error processing your question"
+}
+```
+
+## Testing with Postman
+
+1. Open Postman
+2. Create a new request
+3. Set the request type to POST
+4. Enter the URL: http://localhost:3000/api/ask
+5. Go to the Body tab
+6. Select "raw" and "JSON (application/json)"
+7. Enter the request body: {"question": "आपके पास कौन से सोलर पैनल हैं?"}
+8. Click Send
+
+## Notes
+
+- The API returns responses in Hindi as specified in the requirements
+- All product data is fetched from MongoDB for each query
+- No authentication is required to use the API
+- The API is rate-limited to prevent abuse
